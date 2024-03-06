@@ -1,0 +1,40 @@
+# Makefile for run code files
+CC = gcc
+CFLAGS = -Wall
+CFLAGS_SECURE = -Wall -Wextra  -Werror
+LDFLAGS = -lrt -pthread
+
+# Rules for build components
+safety.o: safety.c safety.h
+    $(CC) $(CFLAGS) -c safety.c
+
+cardreader: cardreader.o safety.o
+    $(CC) -o $@ $^ $(LDFLAGS)
+
+cardreader.o: cardreader.c safety.h shm_struct.h
+    $(CC) -c $< $(CFLAGS)
+
+callpoint: callpoint.o safety.o
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+callpoint.o: callpoint.c safety.h
+	$(CC) -c $< $(CFLAGS_SECURE)
+
+door: door.o safety.o
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+door.o: door.c safety.h
+	$(CC) -c $< $(CFLAGS_SECURE)
+
+firealarm: firealarm.o safety.o
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+firealarm.o: firealarm.c safety.h
+	$(CC) -c $< $(CFLAGS_SECURE)
+
+overseer.o: overseer.c
+	$(CC) -c $< $(CFLAGS)	
+
+simulator.o: simulator.c
+	$(CC) -c $< $(CFLAGS)	
+
